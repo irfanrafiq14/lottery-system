@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <circle cx="200" cy="200" r="180" fill="#FFD700" opacity="0.15"/>
+  <text x="200" y="118" text-anchor="middle" fill="#FFD700" font-size="32" font-weight="bold" font-family="Georgia, serif">JR</text>
+  <text x="200" y="250" text-anchor="middle" fill="#FFD700" font-size="13" font-family="sans-serif" opacity="0.8">Jeeto Rewards</text>
+</svg>
