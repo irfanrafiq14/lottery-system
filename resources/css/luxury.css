@@ -1,15 +1,18 @@
 /* Luxury Dark + Gold Theme */
 
 :root {
-    --gold: #FFD700;
-    --gold-light: #FFE566;
-    --gold-dark: #B8860B;
-    --purple-glow: #9333EA;
-    --purple-soft: rgba(147, 51, 234, 0.3);
+    --theme-primary: #FFD700;
+    --theme-secondary: #9333EA;
+    --gold: var(--theme-primary);
+    --gold-light: color-mix(in srgb, var(--theme-primary) 75%, white);
+    --gold-dark: color-mix(in srgb, var(--theme-primary) 70%, black);
+    --purple-glow: var(--theme-secondary);
+    --purple-soft: color-mix(in srgb, var(--theme-secondary) 30%, transparent);
     --luxury-black: #0a0a0f;
     --luxury-dark: #12121a;
     --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 215, 0, 0.15);
+    --glass-border: color-mix(in srgb, var(--theme-primary) 15%, transparent);
+    --animation-speed: 1;
 }
 
 html {
@@ -19,8 +22,13 @@ html {
 [x-cloak] { display: none !important; }
 
 .font-display {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: var(--font-heading, 'Playfair Display', Georgia, serif);
 }
+
+.text-theme { color: var(--theme-primary); }
+.text-theme-muted { color: color-mix(in srgb, var(--theme-primary) 70%, transparent); }
+.border-theme { border-color: color-mix(in srgb, var(--theme-primary) 25%, transparent); }
+.bg-theme-soft { background-color: color-mix(in srgb, var(--theme-primary) 10%, transparent); }
 
 /* Glassmorphism */
 .glass {
@@ -31,14 +39,14 @@ html {
 }
 
 .glass-gold {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(147, 51, 234, 0.08));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 8%, transparent), color-mix(in srgb, var(--theme-secondary) 8%, transparent));
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
 }
 
 /* Gold gradient text */
 .text-gold-gradient {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+    background: linear-gradient(135deg, var(--theme-primary) 0%, color-mix(in srgb, var(--theme-primary) 70%, #ff8c00) 50%, var(--theme-primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -46,20 +54,20 @@ html {
 
 /* Glow effects */
 .glow-gold {
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--theme-primary) 30%, transparent), 0 0 60px color-mix(in srgb, var(--theme-primary) 10%, transparent);
 }
 
 .glow-purple {
-    box-shadow: 0 0 40px rgba(147, 51, 234, 0.4);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--theme-secondary) 40%, transparent);
 }
 
 .glow-pulse {
-    animation: glowPulse 2s ease-in-out infinite;
+    animation: glowPulse calc(2s / var(--animation-speed)) ease-in-out infinite;
 }
 
 @keyframes glowPulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 0 80px rgba(147, 51, 234, 0.3); }
+    0%, 100% { box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 30%, transparent); }
+    50% { box-shadow: 0 0 40px color-mix(in srgb, var(--theme-primary) 60%, transparent), 0 0 80px color-mix(in srgb, var(--theme-secondary) 30%, transparent); }
 }
 
 /* Floating animation */
@@ -69,11 +77,11 @@ html {
 }
 
 .animate-float {
-    animation: float 4s ease-in-out infinite;
+    animation: float calc(4s / var(--animation-speed)) ease-in-out infinite;
 }
 
 .animate-float-delay {
-    animation: float 5s ease-in-out 1s infinite;
+    animation: float calc(5s / var(--animation-speed)) ease-in-out calc(1s / var(--animation-speed)) infinite;
 }
 
 @keyframes floatSlow {
@@ -82,7 +90,7 @@ html {
 }
 
 .animate-float-slow {
-    animation: floatSlow 6s ease-in-out infinite;
+    animation: floatSlow calc(6s / var(--animation-speed)) ease-in-out infinite;
 }
 
 /* Particle background */
@@ -98,9 +106,9 @@ html {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: rgba(255, 215, 0, 0.4);
+    background: color-mix(in srgb, var(--theme-primary) 40%, transparent);
     border-radius: 50%;
-    animation: particleFloat 15s linear infinite;
+    animation: particleFloat calc(15s / var(--animation-speed)) linear infinite;
 }
 
 @keyframes particleFloat {
@@ -112,7 +120,7 @@ html {
 
 /* Luxury buttons */
 .btn-gold {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: linear-gradient(135deg, var(--theme-primary), color-mix(in srgb, var(--theme-primary) 75%, #ff8c00));
     color: #0a0a0f;
     font-weight: 700;
     transition: all 0.3s ease;
@@ -122,7 +130,7 @@ html {
 
 .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 10px 30px color-mix(in srgb, var(--theme-primary) 40%, transparent);
 }
 
 .btn-gold::after {
@@ -139,16 +147,16 @@ html {
 }
 
 .btn-outline-gold {
-    border: 2px solid rgba(255, 215, 0, 0.5);
-    color: #FFD700;
+    border: 2px solid color-mix(in srgb, var(--theme-primary) 50%, transparent);
+    color: var(--theme-primary);
     background: transparent;
     transition: all 0.3s ease;
 }
 
 .btn-outline-gold:hover {
-    background: rgba(255, 215, 0, 0.1);
-    border-color: #FFD700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    background: color-mix(in srgb, var(--theme-primary) 10%, transparent);
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--theme-primary) 20%, transparent);
 }
 
 /* Lottery balls */
@@ -156,8 +164,8 @@ html {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #FFE566, #FFD700, #B8860B);
-    box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3), 0 5px 20px rgba(255, 215, 0, 0.4);
+    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--theme-primary), var(--gold-dark));
+    box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3), 0 5px 20px color-mix(in srgb, var(--theme-primary) 40%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,7 +182,7 @@ html {
 }
 
 .progress-gold-fill {
-    background: linear-gradient(90deg, #FFD700, #FFA500);
+    background: linear-gradient(90deg, var(--theme-primary), color-mix(in srgb, var(--theme-primary) 75%, #ff8c00));
     height: 100%;
     border-radius: 9999px;
     transition: width 1.5s ease;
@@ -193,7 +201,7 @@ html {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(147, 51, 234, 0.15), transparent 70%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--theme-secondary) 15%, transparent), transparent 70%);
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
@@ -220,10 +228,10 @@ html {
 .preloader-spinner {
     width: 60px;
     height: 60px;
-    border: 3px solid rgba(255, 215, 0, 0.2);
-    border-top-color: #FFD700;
+    border: 3px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
+    border-top-color: var(--theme-primary);
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin calc(0.8s / var(--animation-speed)) linear infinite;
 }
 
 @keyframes spin {
@@ -251,9 +259,9 @@ html {
     position: absolute;
     width: 24px;
     height: 24px;
-    background: radial-gradient(circle at 30% 30%, #FFE566, #FFD700);
+    background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--theme-primary));
     border-radius: 50%;
-    animation: coinFall 3s linear forwards;
+    animation: coinFall calc(3s / var(--animation-speed)) linear forwards;
 }
 
 @keyframes coinFall {
@@ -262,26 +270,26 @@ html {
 
 /* Swiper overrides */
 .swiper-pagination-bullet {
-    background: rgba(255, 215, 0, 0.5) !important;
+    background: color-mix(in srgb, var(--theme-primary) 50%, transparent) !important;
 }
 
 .swiper-pagination-bullet-active {
-    background: #FFD700 !important;
+    background: var(--theme-primary) !important;
     width: 24px !important;
     border-radius: 4px !important;
 }
 
 /* User dashboard luxury cards */
 .luxury-card {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(147, 51, 234, 0.05));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--theme-primary) 5%, transparent), color-mix(in srgb, var(--theme-secondary) 5%, transparent));
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 215, 0, 0.15);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 15%, transparent);
     border-radius: 1rem;
 }
 
 .luxury-input {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
     color: #fff;
     caret-color: #fff;
     border-radius: 0.75rem;
@@ -289,8 +297,8 @@ html {
 
 .luxury-input:focus {
     outline: none;
-    border-color: #FFD700;
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary) 15%, transparent);
     color: #fff;
 }
 
@@ -305,7 +313,7 @@ html {
     -webkit-text-fill-color: #fff !important;
     caret-color: #fff;
     box-shadow: 0 0 0 1000px rgba(10, 10, 15, 0.95) inset !important;
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent);
     transition: background-color 9999s ease-out 0s;
 }
 
@@ -326,7 +334,7 @@ html {
 
 /* Step connector line */
 .step-connector {
-    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--theme-primary) 40%, transparent), transparent);
     height: 2px;
 }
 
@@ -349,7 +357,7 @@ html {
 .skeleton {
     background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
     background-size: 200% 100%;
-    animation: skeleton 1.5s infinite;
+    animation: skeleton calc(1.5s / var(--animation-speed)) infinite;
 }
 
 @keyframes skeleton {
@@ -364,9 +372,9 @@ html {
 
 /* Announcement bar */
 .announcement-bar {
-    background: linear-gradient(90deg, #9333EA, #FFD700, #9333EA);
+    background: linear-gradient(90deg, var(--theme-secondary), var(--theme-primary), var(--theme-secondary));
     background-size: 200% 100%;
-    animation: shimmer 3s linear infinite;
+    animation: shimmer calc(3s / var(--animation-speed)) linear infinite;
 }
 
 @keyframes shimmer {

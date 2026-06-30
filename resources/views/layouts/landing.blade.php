@@ -15,11 +15,8 @@
     @if($favicon = \App\Services\LandingPageService::assetUrl($seo['favicon'] ?? null))
         <link rel="icon" href="{{ $favicon }}">
     @endif
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @vite(['resources/js/landing.js'])
+    @include('partials.theme-vars')
     @if(($sectionsEnabled['analytics'] ?? true) && !empty($analytics['custom_css']))
         <style>{!! $analytics['custom_css'] !!}</style>
     @endif
@@ -33,14 +30,7 @@
     <script type="application/ld+json">
     {"@@context":"https://schema.org","@@type":"WebSite","name":"{{ config('app.name') }}","description":"{{ $seo['meta_description'] ?? '' }}","url":"{{ url('/') }}"}
     </script>
-    @if($sectionsEnabled['theme'] ?? true)
-    <style>
-        :root {
-            --theme-primary: {{ $theme['primary_color'] ?? '#FFD700' }};
-            --theme-secondary: {{ $theme['secondary_color'] ?? '#9333EA' }};
-        }
-    </style>
-    @endif
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="bg-[#0a0a0f] text-white antialiased overflow-x-hidden">
     <div id="preloader"><div class="preloader-spinner"></div></div>
@@ -64,16 +54,16 @@
             </a>
             <nav class="hidden items-center gap-8 md:flex">
                 @if($sectionsEnabled['steps'] ?? true)
-                    <a href="#how-it-works" class="text-sm text-white/70 transition hover:text-[#FFD700]">How It Works</a>
+                    <a href="#how-it-works" class="text-sm text-white/70 transition hover:text-gold">How It Works</a>
                 @endif
                 @if($sectionsEnabled['jackpot'] ?? true)
-                    <a href="#jackpot" class="text-sm text-white/70 transition hover:text-[#FFD700]">Jackpot</a>
+                    <a href="#jackpot" class="text-sm text-white/70 transition hover:text-gold">Jackpot</a>
                 @endif
                 @if($sectionsEnabled['winners'] ?? true)
-                    <a href="#winners" class="text-sm text-white/70 transition hover:text-[#FFD700]">Winners</a>
+                    <a href="#winners" class="text-sm text-white/70 transition hover:text-gold">Winners</a>
                 @endif
                 @if($sectionsEnabled['faqs'] ?? true)
-                    <a href="#faq" class="text-sm text-white/70 transition hover:text-[#FFD700]">FAQ</a>
+                    <a href="#faq" class="text-sm text-white/70 transition hover:text-gold">FAQ</a>
                 @endif
             </nav>
             <div class="flex items-center gap-3">

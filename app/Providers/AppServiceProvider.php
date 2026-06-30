@@ -28,5 +28,9 @@ class AppServiceProvider extends ServiceProvider
         View::composer('admin.cms.*', function ($view) {
             $view->with('sectionsEnabled', SiteSetting::current()->sectionsEnabled());
         });
+
+        View::composer(['layouts.app', 'layouts.guest'], function ($view) {
+            $view->with('theme', SiteSetting::current()->section('theme'));
+        });
     }
 }

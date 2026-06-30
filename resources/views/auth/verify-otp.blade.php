@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="mb-6 text-center">
-        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#FFD700]/10 text-[#FFD700]">
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold">
             <i class="fas fa-envelope text-xl"></i>
         </div>
         <h2 class="font-display text-xl font-semibold text-gold-gradient">Verify your email</h2>

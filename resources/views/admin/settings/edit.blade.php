@@ -6,7 +6,7 @@
     <div class="mb-6">
         <a href="{{ route('admin.pools.index') }}" class="text-sm text-indigo-600 hover:underline">&larr; Back to pools</a>
         <h1 class="mt-2 text-2xl font-bold text-slate-900">Prize Split Settings</h1>
-        <p class="mt-1 text-sm text-slate-500">Configure how the total pool is divided between the system and the winner.</p>
+        <p class="mt-1 text-sm text-slate-500">Default split for all pools. Individual pools can use this or set their own custom %.</p>
     </div>
 
     <div class="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-6">

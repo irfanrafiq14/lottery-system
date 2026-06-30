@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entry;
+use App\Models\PaymentSetting;
 use App\Models\Pool;
 use App\Services\PoolPrizeService;
 use App\Services\RealtimeService;
@@ -34,8 +35,9 @@ class EntryController extends Controller
         }
 
         $prize = $prizeService->prizeForPool($pool, $weekNumber);
+        $payment = PaymentSetting::current();
 
-        return view('entries.create', compact('pool', 'weekNumber', 'prize'));
+        return view('entries.create', compact('pool', 'weekNumber', 'prize', 'payment'));
     }
 
     public function store(Request $request, Pool $pool, RealtimeService $realtime): RedirectResponse

@@ -31,7 +31,7 @@ class EmailService
                     $winner->user,
                     $winner->pool,
                     $winner->week_number,
-                    $prize['winner'],
+                    $winner->prize_amount ?: $prize['winner'],
                     $prize['total'],
                     $prize['participants'],
                 )

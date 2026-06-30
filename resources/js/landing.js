@@ -197,12 +197,15 @@ function initConfetti() {
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    const rootStyles = getComputedStyle(document.documentElement);
+    const themePrimary = rootStyles.getPropertyValue('--theme-primary').trim() || '#FFD700';
+    const themeSecondary = rootStyles.getPropertyValue('--theme-secondary').trim() || '#9333EA';
     const pieces = Array.from({ length: 80 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
         w: 8 + Math.random() * 6,
         h: 4 + Math.random() * 4,
-        color: ['#FFD700', '#9333EA', '#FFA500', '#fff'][Math.floor(Math.random() * 4)],
+        color: [themePrimary, themeSecondary, themePrimary, '#fff'][Math.floor(Math.random() * 4)],
         speed: 1 + Math.random() * 3,
         rot: Math.random() * 360,
     }));

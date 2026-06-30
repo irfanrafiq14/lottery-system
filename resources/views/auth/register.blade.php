@@ -36,5 +36,5 @@
 @endsection
 
 @section('footer')
-    Already have an account? <a href="{{ route('login') }}" class="font-medium text-[#FFD700] hover:underline">Sign in</a>
+    Already have an account? <a href="{{ route('login') }}" class="font-medium text-gold hover:underline">Sign in</a>
 @endsection

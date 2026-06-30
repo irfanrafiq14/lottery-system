@@ -9,10 +9,9 @@
         <meta name="realtime-user-id" content="{{ auth()->id() }}">
     @endauth
     <title>@yield('title', 'Dashboard') — {{ config('app.name') }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.theme-vars')
 </head>
 <body class="min-h-screen bg-[#0a0a0f] text-white antialiased">
     <div class="particles fixed inset-0 pointer-events-none z-0" id="particles"></div>
@@ -21,11 +20,11 @@
         <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
             <a href="{{ route('dashboard') }}" class="font-display text-xl font-bold text-gold-gradient">{{ config('app.name') }}</a>
             <div class="flex items-center gap-4">
-                <a href="{{ route('home') }}" class="hidden text-sm text-white/60 hover:text-[#FFD700] sm:inline">Home</a>
+                <a href="{{ route('home') }}" class="hidden text-sm text-white/60 hover:text-gold sm:inline">Home</a>
                 @auth
                     <span id="realtime-status" class="h-2 w-2 rounded-full bg-slate-500" title="Connecting..."></span>
                     @if(auth()->user()->isEmailVerified())
-                        <span class="hidden rounded-full bg-[#FFD700]/10 px-3 py-1 text-xs font-semibold text-[#FFD700] sm:inline">
+                        <span class="hidden rounded-full bg-gold/10 px-3 py-1 text-xs font-semibold text-gold sm:inline">
                             <i class="fas fa-check-circle mr-1"></i>Verified
                         </span>
                     @endif

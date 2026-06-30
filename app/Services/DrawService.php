@@ -9,6 +9,10 @@ use Illuminate\Support\Collection;
 
 class DrawService
 {
+    public function __construct(
+        private PoolPrizeService $prizeService,
+    ) {}
+
     public function lockAllPools(): void
     {
         Pool::query()->update(['is_active' => false]);
@@ -38,11 +42,13 @@ class DrawService
             }
 
             $winningEntry = $eligibleEntries->random();
+            $prize = $this->prizeService->prizeForPool($pool, $weekNumber);
 
             $winners->push(Winner::create([
                 'user_id' => $winningEntry->user_id,
                 'pool_id' => $pool->id,
                 'week_number' => $weekNumber,
+                'prize_amount' => $prize['winner'],
             ]));
         }
 

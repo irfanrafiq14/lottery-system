@@ -23,7 +23,7 @@
         </div>
 
         <label class="flex items-center gap-2 text-sm text-white/60">
-            <input type="checkbox" name="remember" class="rounded border-white/20 bg-white/5 text-[#FFD700]">
+            <input type="checkbox" name="remember" class="rounded border-white/20 bg-white/5 text-gold">
             Remember me
         </label>
 
@@ -34,5 +34,5 @@
 @endsection
 
 @section('footer')
-    Don't have an account? <a href="{{ route('register') }}" class="font-medium text-[#FFD700] hover:underline">Register</a>
+    Don't have an account? <a href="{{ route('register') }}" class="font-medium text-gold hover:underline">Register</a>
 @endsection

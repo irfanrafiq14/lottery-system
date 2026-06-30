@@ -1,10 +1,10 @@
 @props(['prize', 'simple' => false])
 
-<div {{ $attributes->merge(['class' => 'mt-3 rounded-xl bg-white/5 px-4 py-3 text-sm border border-[#FFD700]/10', 'data-pool-prize' => '', 'data-pool-prize-simple' => $simple ? '1' : '0']) }}>
+<div {{ $attributes->merge(['class' => 'mt-3 rounded-xl bg-white/5 px-4 py-3 text-sm border border-gold/10', 'data-pool-prize' => '', 'data-pool-prize-simple' => $simple ? '1' : '0']) }}>
     @if($simple)
         <div class="flex items-center justify-between">
-            <span class="font-medium text-[#FFD700]/80" data-prize-winner-label>Winner prize</span>
-            <span class="text-lg font-bold text-[#FFD700]" data-prize-winner>{{ number_format($prize['winner']) }} PKR</span>
+            <span class="font-medium text-gold/80" data-prize-winner-label>Winner prize</span>
+            <span class="text-lg font-bold text-gold" data-prize-winner>{{ number_format($prize['winner']) }} PKR</span>
         </div>
     @else
         <div class="flex items-center justify-between text-slate-600">

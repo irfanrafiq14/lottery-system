@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\LandingFeatureController;
 use App\Http\Controllers\Admin\LandingStepController;
 use App\Http\Controllers\Admin\LandingTestimonialController;
 use App\Http\Controllers\Admin\LandingWinnerController;
+use App\Http\Controllers\Admin\PaymentSettingsController;
 use App\Http\Controllers\Admin\PoolController as AdminPoolController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -76,6 +77,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/pools/{pool}/toggle', [AdminPoolController::class, 'toggle'])->name('pools.toggle');
         Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::get('/payment-settings', [PaymentSettingsController::class, 'edit'])->name('payment-settings.edit');
+        Route::put('/payment-settings', [PaymentSettingsController::class, 'update'])->name('payment-settings.update');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/winners', [AdminWinnerController::class, 'index'])->name('winners.index');
         Route::get('/draw', [DrawController::class, 'index'])->name('draw.index');

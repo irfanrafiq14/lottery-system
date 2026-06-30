@@ -16,7 +16,7 @@
             'players' => ['Players Joined', 'Unique users with at least one approved entry', 'fa-users'],
             'tickets' => ['Tickets Sold', 'Total approved entries (all weeks)', 'fa-ticket'],
             'winners' => ['Total Winners', 'All weekly draw winners recorded', 'fa-trophy'],
-            'prize_paid' => ['Prize Paid (PKR)', 'Sum of winner prizes from all draws', 'fa-coins'],
+            'prize_paid' => ['Prize Paid (PKR)', 'Sum of prizes locked at each draw (unchanged by later % updates)', 'fa-coins'],
         ] as $key => [$label, $hint, $icon])
             <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div class="flex items-center gap-3">

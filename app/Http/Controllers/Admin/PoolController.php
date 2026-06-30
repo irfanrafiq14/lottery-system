@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pool;
+use App\Models\RewardSetting;
 use App\Services\PoolPrizeService;
 use App\Services\RealtimeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PoolController extends Controller
@@ -30,7 +32,10 @@ class PoolController extends Controller
 
     public function create(): View
     {
-        return view('admin.pools.create');
+        return view('admin.pools.create', [
+            'pool' => new Pool,
+            'globalSettings' => RewardSetting::current(),
+        ]);
     }
 
     public function store(Request $request, RealtimeService $realtime): RedirectResponse
@@ -41,12 +46,16 @@ class PoolController extends Controller
             'is_active' => ['sometimes', 'boolean'],
         ]);
 
+        $split = $this->resolvePrizeSplit($request);
+
         $slug = $this->uniqueSlug(Str::slug($validated['name']));
 
         Pool::create([
             'name' => $validated['name'],
             'slug' => $slug,
             'entry_fee' => $validated['entry_fee'],
+            'system_share_percent' => $split['system_share_percent'],
+            'winner_share_percent' => $split['winner_share_percent'],
             'is_active' => $request->boolean('is_active', true),
         ]);
 
@@ -58,7 +67,10 @@ class PoolController extends Controller
 
     public function edit(Pool $pool): View
     {
-        return view('admin.pools.edit', compact('pool'));
+        return view('admin.pools.edit', [
+            'pool' => $pool,
+            'globalSettings' => RewardSetting::current(),
+        ]);
     }
 
     public function update(Request $request, Pool $pool, RealtimeService $realtime): RedirectResponse
@@ -69,10 +81,14 @@ class PoolController extends Controller
             'is_active' => ['sometimes', 'boolean'],
         ]);
 
+        $split = $this->resolvePrizeSplit($request);
+
         $pool->update([
             'name' => $validated['name'],
             'slug' => $this->uniqueSlug(Str::slug($validated['name']), $pool->id),
             'entry_fee' => $validated['entry_fee'],
+            'system_share_percent' => $split['system_share_percent'],
+            'winner_share_percent' => $split['winner_share_percent'],
             'is_active' => $request->boolean('is_active'),
         ]);
 
@@ -91,6 +107,35 @@ class PoolController extends Controller
         $status = $pool->is_active ? 'opened' : 'closed';
 
         return back()->with('success', "{$pool->name} pool has been {$status}.");
+    }
+
+    /**
+     * @return array{system_share_percent: ?int, winner_share_percent: ?int}
+     */
+    private function resolvePrizeSplit(Request $request): array
+    {
+        if ($request->boolean('use_default_split')) {
+            return [
+                'system_share_percent' => null,
+                'winner_share_percent' => null,
+            ];
+        }
+
+        $validated = $request->validate([
+            'system_share_percent' => ['required', 'integer', 'min:0', 'max:100'],
+            'winner_share_percent' => ['required', 'integer', 'min:0', 'max:100'],
+        ]);
+
+        if ($validated['system_share_percent'] + $validated['winner_share_percent'] !== 100) {
+            throw ValidationException::withMessages([
+                'system_share_percent' => 'System and winner percentages must add up to 100%.',
+            ]);
+        }
+
+        return [
+            'system_share_percent' => $validated['system_share_percent'],
+            'winner_share_percent' => $validated['winner_share_percent'],
+        ];
     }
 
     private function uniqueSlug(string $slug, ?int $ignoreId = null): string

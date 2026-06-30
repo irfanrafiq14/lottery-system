@@ -11,6 +11,7 @@ class Winner extends Model
         'user_id',
         'pool_id',
         'week_number',
+        'prize_amount',
     ];
 
     public function user(): BelongsTo

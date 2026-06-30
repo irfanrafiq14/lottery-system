@@ -23,6 +23,14 @@
                 </div>
                 <p class="text-2xl font-bold">{{ number_format($pool->entry_fee) }} PKR</p>
                 <p class="mt-2 text-sm text-slate-500">{{ $pool->approved_entries_count }} approved · {{ $pool->pending_entries_count }} pending</p>
+                <p class="mt-1 text-xs text-slate-400">
+                    Split:
+                    @if($pool->usesDefaultSplit())
+                        Default ({{ $prize['system_percent'] }}% / {{ $prize['winner_percent'] }}%)
+                    @else
+                        Custom ({{ $prize['system_percent'] }}% system · {{ $prize['winner_percent'] }}% winner)
+                    @endif
+                </p>
 
                 <x-pool-prize :prize="$prize" class="mt-3" />
 

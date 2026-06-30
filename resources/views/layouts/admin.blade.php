@@ -25,6 +25,7 @@
                 <a href="{{ route('admin.entries.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.entries.*') ? 'bg-slate-800' : '' }}">Entries</a>
                 <a href="{{ route('admin.pools.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.pools.*') ? 'bg-slate-800' : '' }}">Pools</a>
                 <a href="{{ route('admin.settings.edit') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.settings.*') ? 'bg-slate-800' : '' }}">Prize Split</a>
+                <a href="{{ route('admin.payment-settings.edit') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.payment-settings.*') ? 'bg-slate-800' : '' }}">Payment Details</a>
                 <a href="{{ route('admin.users.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.users.*') ? 'bg-slate-800' : '' }}">Users</a>
                 <a href="{{ route('admin.winners.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.winners.*') ? 'bg-slate-800' : '' }}">Winners</a>
                 <a href="{{ route('admin.draw.index') }}" class="block rounded-lg px-3 py-2 hover:bg-slate-800 {{ request()->routeIs('admin.draw.*') ? 'bg-slate-800' : '' }}">Draw</a>

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Entry;
-use App\Models\RewardSetting;
 use App\Models\User;
 use App\Models\Winner;
 
@@ -36,23 +35,6 @@ class LandingStatisticsService
 
     private function totalPrizePaid(): int
     {
-        $settings = RewardSetting::current();
-
-        return Winner::query()
-            ->with('pool')
-            ->get()
-            ->sum(function (Winner $winner) use ($settings) {
-                if (! $winner->pool) {
-                    return 0;
-                }
-
-                $participants = Entry::withTrashed()
-                    ->where('pool_id', $winner->pool_id)
-                    ->where('week_number', $winner->week_number)
-                    ->where('status', 'approved')
-                    ->count();
-
-                return $settings->calculatePrize($participants, $winner->pool->entry_fee)['winner'];
-            });
+        return (int) Winner::query()->sum('prize_amount');
     }
 }

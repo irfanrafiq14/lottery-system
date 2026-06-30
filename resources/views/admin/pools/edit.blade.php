@@ -31,6 +31,8 @@
                 Pool is open for entries
             </label>
 
+            @include('admin.pools._prize_split')
+
             <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">
                 Save changes
             </button>

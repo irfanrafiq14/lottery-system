@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Pool;
-use App\Models\RewardSetting;
 use App\Support\WeekHelper;
 
 class PoolPrizeService
@@ -12,16 +11,22 @@ class PoolPrizeService
     {
         $weekNumber = $weekNumber ?? WeekHelper::currentWeekNumber();
         $participants = $pool->participantCount($weekNumber);
-        $settings = RewardSetting::current();
+        $split = $pool->effectiveSplit();
 
-        return array_merge(
-            $settings->calculatePrize($participants, $pool->entry_fee),
-            [
-                'entry_fee' => $pool->entry_fee,
-                'system_percent' => $settings->system_share_percent,
-                'winner_percent' => $settings->winner_share_percent,
-            ]
-        );
+        $total = $participants * $pool->entry_fee;
+        $system = (int) round($total * $split['system_share_percent'] / 100);
+        $winner = (int) round($total * $split['winner_share_percent'] / 100);
+
+        return [
+            'total' => $total,
+            'system' => $system,
+            'winner' => $winner,
+            'participants' => $participants,
+            'entry_fee' => $pool->entry_fee,
+            'system_percent' => $split['system_share_percent'],
+            'winner_percent' => $split['winner_share_percent'],
+            'uses_default_split' => $pool->usesDefaultSplit(),
+        ];
     }
 
     /**

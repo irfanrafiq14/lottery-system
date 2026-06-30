@@ -253,7 +253,7 @@ class LandingCmsController extends Controller
 
         SiteSetting::current()->updateSection('theme', [
             ...$validated,
-            'dark_mode' => $request->boolean('dark_mode', true),
+            'dark_mode' => $request->boolean('dark_mode'),
         ]);
 
         return back()->with('success', 'Theme settings updated.');

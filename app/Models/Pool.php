@@ -11,6 +11,8 @@ class Pool extends Model
         'name',
         'slug',
         'entry_fee',
+        'system_share_percent',
+        'winner_share_percent',
         'is_active',
     ];
 
@@ -18,6 +20,24 @@ class Pool extends Model
     {
         return [
             'is_active' => 'boolean',
+        ];
+    }
+
+    public function usesDefaultSplit(): bool
+    {
+        return $this->system_share_percent === null && $this->winner_share_percent === null;
+    }
+
+    /**
+     * @return array{system_share_percent: int, winner_share_percent: int}
+     */
+    public function effectiveSplit(): array
+    {
+        $global = RewardSetting::current();
+
+        return [
+            'system_share_percent' => $this->system_share_percent ?? $global->system_share_percent,
+            'winner_share_percent' => $this->winner_share_percent ?? $global->winner_share_percent,
         ];
     }
 
