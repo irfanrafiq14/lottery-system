@@ -1,4 +1,5 @@
 import '../css/app.css';
+import { initCountdownElements } from './countdown';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Swiper from 'swiper';
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeader();
     initBackToTop();
     initCursorGlow();
-    initCountdown();
+    initCountdownElements();
     initCountUp();
     initSwipers();
     initLottie();
@@ -86,28 +87,6 @@ function initCursorGlow() {
         glow.style.left = `${e.clientX}px`;
         glow.style.top = `${e.clientY}px`;
     });
-}
-
-function initCountdown() {
-    const el = document.getElementById('hero-countdown');
-    const target = el?.dataset.target;
-    if (!el || !target) return;
-
-    const end = new Date(target).getTime();
-    function tick() {
-        const diff = end - Date.now();
-        if (diff <= 0) {
-            el.textContent = 'Draw happening now!';
-            return;
-        }
-        const d = Math.floor(diff / 86400000);
-        const h = Math.floor((diff % 86400000) / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        el.textContent = `${d}d ${h}h ${m}m ${s}s`;
-    }
-    tick();
-    setInterval(tick, 1000);
 }
 
 function initCountUp() {

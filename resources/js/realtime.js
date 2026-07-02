@@ -1,4 +1,5 @@
 import './echo';
+import { updateCountdownTargets } from './countdown';
 
 const statusColors = {
     bronze: { btn: 'bg-amber-600 hover:bg-amber-700', border: 'border-amber-200' },
@@ -201,11 +202,19 @@ function handleUpdate(data, context, userId) {
         case 'draw.completed':
             updatePoolCards(payload.pools, userId);
             updateAdminStats(payload.admin_stats);
+            if (payload.next_draw_at) {
+                updateCountdownTargets(payload.next_draw_at);
+            }
             document.querySelectorAll('[data-pool-action]').forEach((el) => {
                 el.dataset.userEntryStatus = 'none';
             });
             updatePoolCards(payload.pools, userId);
-            showToast('Weekly draw completed — new week started!', 'success');
+            if (payload.winners?.length) {
+                const names = payload.winners.map((w) => `${w.pool_name}: ${w.user_name}`).join(', ');
+                showToast(`Winners: ${names}`, 'success');
+            } else {
+                showToast('Weekly draw completed — new week started!', 'success');
+            }
             break;
     }
 }

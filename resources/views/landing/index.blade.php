@@ -43,7 +43,7 @@
                     <p class="mt-1 font-display text-4xl font-bold text-gold-gradient" data-countup="{{ $hero['jackpot_amount'] }}" data-prefix="PKR ">0</p>
                     <p class="mt-3 text-sm text-white/50">
                         <i class="fas fa-clock mr-1 text-gold"></i>
-                        Draw in: <span id="hero-countdown" class="font-semibold text-white" data-target="{{ $nextDraw->toIso8601String() }}">Loading...</span>
+                        Draw in: <span id="hero-countdown" class="font-semibold text-white" data-countdown-target="{{ $nextDraw->toIso8601String() }}" data-countdown-expired="Draw happening now!">Loading...</span>
                     </p>
                 </div>
             </div>
@@ -116,8 +116,8 @@
                         <p class="mt-1 text-2xl font-bold text-gold">{{ number_format($jackpot['tickets_remaining']) }}</p>
                     </div>
                     <div class="rounded-xl bg-white/5 p-4">
-                        <p class="text-xs uppercase text-white/50">Draw Date</p>
-                        <p class="mt-1 text-lg font-bold">{{ $nextDraw->format('M d, Y') }}</p>
+                        <p class="text-xs uppercase text-white/50">Time Until Draw</p>
+                        <p class="mt-1 text-lg font-bold text-gold" data-countdown-target="{{ $nextDraw->toIso8601String() }}" data-countdown-expired="Draw tonight!">Loading...</p>
                     </div>
                     <div class="rounded-xl bg-white/5 p-4">
                         <p class="text-xs uppercase text-white/50">Est. Winner Prize</p>
@@ -141,43 +141,75 @@
     </section>
     @endif
 
-    @if(($sectionsEnabled['winners'] ?? true) && $winners->isNotEmpty())
+    @if(($sectionsEnabled['winners'] ?? true) && ($drawWinners->isNotEmpty() || $winners->isNotEmpty()))
     {{-- WEEKLY WINNERS --}}
     <section id="winners" class="relative py-24 overflow-hidden">
         <div class="mx-auto max-w-7xl px-4 lg:px-8">
             <div class="text-center mb-12" data-aos="fade-up">
                 <h2 class="font-display text-4xl font-bold text-gold-gradient">Weekly Winners</h2>
-                <p class="mt-4 text-white/60">Real people, real prizes, every Friday</p>
+                <p class="mt-4 text-white/60">
+                    @if($drawWinners->isNotEmpty())
+                        Verified draw results — updated after every Friday draw
+                    @else
+                        Real people, real prizes, every Friday
+                    @endif
+                </p>
             </div>
             <div class="swiper winners-swiper pb-12">
                 <div class="swiper-wrapper">
-                    @foreach($winners as $winner)
-                        <div class="swiper-slide !w-80">
-                            <div class="glass-gold group rounded-2xl overflow-hidden transition hover:-translate-y-2 hover:glow-gold">
-                                <div class="relative h-48 bg-gradient-to-br from-gold/20 to-luxury-purple/20 flex items-center justify-center">
-                                    @if($img = $winner->imageUrl())
-                                        <img src="{{ $img }}" alt="{{ $winner->name }}" class="h-full w-full object-cover" loading="lazy">
-                                    @else
-                                        <img src="{{ \App\Services\LandingPageService::placeholder('winner-placeholder.svg') }}" alt="Winner" class="h-full w-full object-cover opacity-80" loading="lazy">
-                                    @endif
-                                    <div class="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-black shadow-lg">
-                                        <i class="fas fa-trophy"></i>
+                    @if($drawWinners->isNotEmpty())
+                        @foreach($drawWinners as $winner)
+                            <div class="swiper-slide !w-80">
+                                <div class="glass-gold group rounded-2xl overflow-hidden transition hover:-translate-y-2 hover:glow-gold">
+                                    <div class="relative h-48 bg-gradient-to-br from-gold/20 to-luxury-purple/20 flex items-center justify-center">
+                                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-gold/20 text-4xl font-bold text-gold">
+                                            {{ strtoupper(substr($winner->user->name, 0, 1)) }}
+                                        </div>
+                                        <div class="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-black shadow-lg">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="p-6">
-                                    <h3 class="font-display text-xl font-bold">{{ $winner->name }}</h3>
-                                    <p class="mt-1 text-2xl font-bold text-gold">PKR {{ number_format($winner->prize_amount) }}</p>
-                                    <div class="mt-3 flex items-center justify-between text-sm text-white/60">
-                                        <span><i class="fas fa-globe mr-1"></i>{{ $winner->country ?? '—' }}</span>
-                                        <span>{{ $winner->won_at?->format('M d, Y') ?? '—' }}</span>
+                                    <div class="p-6">
+                                        <h3 class="font-display text-xl font-bold">{{ \App\Support\NameHelper::publicDisplay($winner->user->name) }}</h3>
+                                        <p class="mt-1 text-2xl font-bold text-gold">PKR {{ number_format($winner->prize_amount) }}</p>
+                                        <div class="mt-3 flex items-center justify-between text-sm text-white/60">
+                                            <span><i class="fas fa-calendar mr-1"></i>{{ $winner->created_at->format('M d, Y') }}</span>
+                                            <span>{{ \App\Support\WeekHelper::formatWeekNumber($winner->week_number) }}</span>
+                                        </div>
+                                        <span class="mt-2 inline-block rounded-full bg-luxury-purple/30 px-3 py-0.5 text-xs text-purple-200">{{ $winner->pool->name }} Pool</span>
                                     </div>
-                                    @if($winner->pool_name)
-                                        <span class="mt-2 inline-block rounded-full bg-luxury-purple/30 px-3 py-0.5 text-xs text-purple-200">{{ $winner->pool_name }} Pool</span>
-                                    @endif
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @else
+                        @foreach($winners as $winner)
+                            <div class="swiper-slide !w-80">
+                                <div class="glass-gold group rounded-2xl overflow-hidden transition hover:-translate-y-2 hover:glow-gold">
+                                    <div class="relative h-48 bg-gradient-to-br from-gold/20 to-luxury-purple/20 flex items-center justify-center">
+                                        @if($img = $winner->imageUrl())
+                                            <img src="{{ $img }}" alt="{{ $winner->name }}" class="h-full w-full object-cover" loading="lazy">
+                                        @else
+                                            <img src="{{ \App\Services\LandingPageService::placeholder('winner-placeholder.svg') }}" alt="Winner" class="h-full w-full object-cover opacity-80" loading="lazy">
+                                        @endif
+                                        <div class="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold text-black shadow-lg">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <h3 class="font-display text-xl font-bold">{{ $winner->name }}</h3>
+                                        <p class="mt-1 text-2xl font-bold text-gold">PKR {{ number_format($winner->prize_amount) }}</p>
+                                        <div class="mt-3 flex items-center justify-between text-sm text-white/60">
+                                            <span><i class="fas fa-globe mr-1"></i>{{ $winner->country ?? '—' }}</span>
+                                            <span>{{ $winner->won_at?->format('M d, Y') ?? '—' }}</span>
+                                        </div>
+                                        @if($winner->pool_name)
+                                            <span class="mt-2 inline-block rounded-full bg-luxury-purple/30 px-3 py-0.5 text-xs text-purple-200">{{ $winner->pool_name }} Pool</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
                 <div class="winners-pagination mt-8 flex justify-center"></div>
             </div>

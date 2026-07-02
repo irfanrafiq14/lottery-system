@@ -10,6 +10,7 @@ use App\Models\LandingTestimonial;
 use App\Models\LandingWinner;
 use App\Models\Pool;
 use App\Models\SiteSetting;
+use App\Models\Winner;
 use App\Support\WeekHelper;
 use Illuminate\Support\Facades\Storage;
 
@@ -58,6 +59,10 @@ class LandingPageService
             'testimonials' => LandingTestimonial::active()->get(),
             'faqs' => LandingFaq::active()->get(),
             'winners' => LandingWinner::active()->get(),
+            'drawWinners' => Winner::with(['user', 'pool'])
+                ->latest()
+                ->take(12)
+                ->get(),
         ];
     }
 

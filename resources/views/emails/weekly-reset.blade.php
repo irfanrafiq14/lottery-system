@@ -11,7 +11,12 @@
     @if($lastWeekWinners->isNotEmpty())
         <ul style="padding-left: 20px;">
             @foreach($lastWeekWinners as $winner)
-                <li><strong>{{ $winner->pool->name }} Pool</strong> — {{ $winner->user->name }}</li>
+                <li>
+                    <strong>{{ $winner->pool->name }} Pool</strong> — {{ $winner->user->name }}
+                    @if($winner->prize_amount)
+                        ({{ number_format($winner->prize_amount) }} PKR)
+                    @endif
+                </li>
             @endforeach
         </ul>
     @else

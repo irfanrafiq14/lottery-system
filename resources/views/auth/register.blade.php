@@ -31,6 +31,21 @@
             <input type="password" name="password_confirmation" id="password_confirmation" required class="luxury-input w-full px-3 py-2.5 text-sm text-white">
         </div>
 
+        @if($referralCode)
+            <div class="rounded-lg border border-gold/20 bg-gold/5 px-4 py-3 text-sm text-white/70">
+                <i class="fas fa-gift mr-1 text-gold"></i>
+                Referred by code: <strong class="text-gold">{{ $referralCode }}</strong>
+                <input type="hidden" name="referral_code" value="{{ $referralCode }}">
+            </div>
+        @else
+            <div>
+                <label for="referral_code" class="mb-1 block text-sm font-medium text-white/70">Referral code <span class="text-white/40">(optional)</span></label>
+                <input type="text" name="referral_code" id="referral_code" value="{{ old('referral_code') }}" placeholder="e.g. ABC12345"
+                    class="luxury-input w-full px-3 py-2.5 text-sm uppercase text-white">
+                @error('referral_code')<p class="mt-1 text-xs text-red-400">{{ $message }}</p>@enderror
+            </div>
+        @endif
+
         <button type="submit" class="btn-gold w-full rounded-xl px-4 py-2.5 text-sm font-semibold">Create account</button>
     </form>
 @endsection

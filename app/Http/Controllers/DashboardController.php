@@ -7,12 +7,13 @@ use App\Models\Pool;
 use App\Models\RewardSetting;
 use App\Models\Winner;
 use App\Services\PoolPrizeService;
+use App\Services\ReferralService;
 use App\Support\WeekHelper;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(PoolPrizeService $prizeService): View
+    public function index(PoolPrizeService $prizeService, ReferralService $referralService): View
     {
         $weekNumber = WeekHelper::currentWeekNumber();
         $user = auth()->user();
@@ -38,8 +39,12 @@ class DashboardController extends Controller
 
         $recentWinners = Winner::with(['user', 'pool'])
             ->latest()
-            ->take(6)
+            ->take(10)
             ->get();
+
+        $userEntriesThisWeek = Entry::where('user_id', $user->id)
+            ->where('week_number', $weekNumber)
+            ->count();
 
         return view('dashboard', [
             'pools' => $pools,
@@ -50,6 +55,9 @@ class DashboardController extends Controller
             'isNewWeek' => WeekHelper::isNewWeekPeriod(),
             'lastWeekWinners' => $lastWeekWinners,
             'recentWinners' => $recentWinners,
+            'userEntriesThisWeek' => $userEntriesThisWeek,
+            'referralUrl' => $referralService->referralUrl($user),
+            'referralCount' => $user->referrals()->whereNotNull('email_verified_at')->count(),
         ]);
     }
 }

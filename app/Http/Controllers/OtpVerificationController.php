@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\OtpService;
+use App\Services\ReferralService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,7 @@ class OtpVerificationController extends Controller
         ]);
     }
 
-    public function verify(Request $request, OtpService $otpService): RedirectResponse
+    public function verify(Request $request, OtpService $otpService, ReferralService $referralService): RedirectResponse
     {
         $request->validate([
             'otp' => ['required', 'string', 'size:6', 'regex:/^[0-9]{6}$/'],
@@ -36,6 +37,9 @@ class OtpVerificationController extends Controller
         $user = auth()->user();
 
         if ($otpService->verify($user, $request->input('otp'))) {
+            $user->refresh();
+            $referralService->notifyReferrer($user);
+
             return redirect()->route('dashboard')
                 ->with('success', 'Email verified successfully! You can now join reward pools.');
         }

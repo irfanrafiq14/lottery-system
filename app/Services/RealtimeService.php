@@ -59,7 +59,7 @@ class RealtimeService
                 'user_name' => $winner->user->name,
                 'pool_name' => $winner->pool->name,
                 'week_number' => $winner->week_number,
-                'winner_prize' => $prize['winner'],
+                'winner_prize' => $winner->prize_amount ?: $prize['winner'],
             ];
         });
 
@@ -69,6 +69,7 @@ class RealtimeService
             'admin_stats' => $this->adminStatsPayload(),
             'week_number' => $drawResult['week_number'] ?? WeekHelper::currentWeekNumber(),
             'deleted_entries' => $drawResult['deleted_entries'] ?? 0,
+            'next_draw_at' => WeekHelper::nextDrawAt()->toIso8601String(),
         ]);
     }
 

@@ -17,7 +17,58 @@
         </div>
     </div>
 
-    @if($isNewWeek)
+    <div class="mb-6 grid gap-6 lg:grid-cols-3">
+        <div class="glass-gold glow-pulse rounded-2xl p-6 lg:col-span-2">
+            <p class="text-sm font-medium text-gold/80">Next draw countdown</p>
+            <div class="mt-3 grid grid-cols-4 gap-3 text-center" id="dashboard-countdown" data-countdown-target="{{ $nextDraw->toIso8601String() }}" data-countdown-parts="1" data-countdown-expired="Draw day — weekly reset in progress">
+                @foreach(['days' => 'Days', 'hours' => 'Hours', 'minutes' => 'Min', 'seconds' => 'Sec'] as $part => $label)
+                    <div class="rounded-xl bg-white/5 px-3 py-3">
+                        <p class="font-display text-2xl font-bold text-white" data-countdown-{{ $part }}>0</p>
+                        <p class="mt-1 text-xs uppercase tracking-wide text-white/50">{{ $label }}</p>
+                    </div>
+                @endforeach
+            </div>
+            <p class="mt-3 text-sm text-white/50">Every Friday at midnight — 1 winner per pool · You have {{ $userEntriesThisWeek }} {{ $userEntriesThisWeek === 1 ? 'entry' : 'entries' }} this week</p>
+        </div>
+
+        <div class="luxury-card p-6">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-share-nodes text-gold"></i>
+                <h2 class="font-display text-lg font-bold">Refer & Earn Friends</h2>
+            </div>
+            <p class="mt-2 text-sm text-white/60">Share your link. When friends verify their email, you get notified.</p>
+            <p class="mt-3 text-xs text-white/40">Your code: <span class="font-mono text-gold">{{ auth()->user()->referral_code }}</span></p>
+            <div class="mt-3 flex gap-2">
+                <input type="text" readonly value="{{ $referralUrl }}" id="referral-url"
+                    class="luxury-input min-w-0 flex-1 px-3 py-2 text-xs text-white">
+                <button type="button" onclick="copyReferralLink(this)" class="btn-gold shrink-0 rounded-lg px-3 py-2 text-xs font-semibold">Copy</button>
+            </div>
+            <p class="mt-3 text-sm text-gold">{{ $referralCount }} verified {{ $referralCount === 1 ? 'referral' : 'referrals' }}</p>
+        </div>
+    </div>
+
+    @if($lastWeekWinners->isNotEmpty())
+        <div class="mb-6 luxury-card border border-gold/20 p-5">
+            <div class="flex items-start gap-4">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="font-semibold text-gold">Last Friday's Winners</p>
+                    <p class="mt-1 text-sm text-white/60">Congratulations to last week's draw winners.</p>
+                    <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        @foreach($lastWeekWinners as $winner)
+                            <div class="rounded-xl bg-white/5 px-4 py-3">
+                                <p class="font-semibold text-white">{{ $winner->user->name }}</p>
+                                <p class="text-sm text-gold">{{ $winner->pool->name }} Pool</p>
+                                <p class="mt-1 text-lg font-bold text-gold">{{ number_format($winner->prize_amount) }} PKR</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @elseif($isNewWeek)
         <div class="mb-6 luxury-card border border-emerald-500/30 p-5">
             <div class="flex items-start gap-4">
                 <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
@@ -25,24 +76,11 @@
                 </div>
                 <div>
                     <p class="font-semibold text-emerald-300">New Week Started</p>
-                    <p class="mt-1 text-sm text-white/60">Last week's draw is complete. All pools are open — re-enter to join this week's draw.</p>
-                    @if($lastWeekWinners->isNotEmpty())
-                        <ul class="mt-2 space-y-1 text-sm text-emerald-300/80">
-                            @foreach($lastWeekWinners as $winner)
-                                <li><strong>{{ $winner->pool->name }}:</strong> {{ $winner->user->name }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
+                    <p class="mt-1 text-sm text-white/60">All pools are open — re-enter to join this week's draw.</p>
                 </div>
             </div>
         </div>
     @endif
-
-    <div class="mb-8 glass-gold glow-pulse rounded-2xl p-6">
-        <p class="text-sm font-medium text-gold/80">Next draw countdown</p>
-        <p class="mt-2 font-display text-3xl font-bold text-white" id="countdown-label">Loading...</p>
-        <p class="mt-1 text-sm text-white/50">Every Friday at midnight — 1 winner per pool</p>
-    </div>
 
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @foreach($pools as $item)
@@ -85,7 +123,7 @@
     </div>
 
     @if($recentWinners->isNotEmpty())
-        <div class="mt-12">
+        <div class="mt-12" id="recent-winners">
             <h2 class="mb-4 font-display text-xl font-bold text-gold-gradient">Recent Winners</h2>
             <div class="luxury-card overflow-hidden">
                 <table class="min-w-full text-sm">
@@ -93,14 +131,16 @@
                         <tr>
                             <th class="px-4 py-3 font-medium">Winner</th>
                             <th class="px-4 py-3 font-medium">Pool</th>
+                            <th class="px-4 py-3 font-medium">Prize</th>
                             <th class="px-4 py-3 font-medium">Week</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-white/5">
+                    <tbody class="divide-y divide-white/5" id="recent-winners-body">
                         @foreach($recentWinners as $winner)
                             <tr class="hover:bg-white/5">
                                 <td class="px-4 py-3">{{ $winner->user->name }}</td>
                                 <td class="px-4 py-3 text-gold">{{ $winner->pool->name }}</td>
+                                <td class="px-4 py-3 font-semibold text-gold">{{ number_format($winner->prize_amount) }} PKR</td>
                                 <td class="px-4 py-3 text-white/60">{{ \App\Support\WeekHelper::formatWeekNumber($winner->week_number) }}</td>
                             </tr>
                         @endforeach
@@ -113,18 +153,14 @@
 
 @push('scripts')
 <script>
-    const target = new Date('{{ $nextDraw->toIso8601String() }}').getTime();
-    const label = document.getElementById('countdown-label');
-    function updateCountdown() {
-        let diff = target - Date.now();
-        if (diff <= 0) { label.textContent = 'Draw day — weekly reset in progress'; return; }
-        const d = Math.floor(diff / 86400000); diff -= d * 86400000;
-        const h = Math.floor(diff / 3600000); diff -= h * 3600000;
-        const m = Math.floor(diff / 60000); diff -= m * 60000;
-        const s = Math.floor(diff / 1000);
-        label.textContent = `${d}d ${h}h ${m}m ${s}s`;
+    function copyReferralLink(btn) {
+        const input = document.getElementById('referral-url');
+        if (!input) return;
+        navigator.clipboard.writeText(input.value).then(() => {
+            const original = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = original; }, 1500);
+        });
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
 </script>
 @endpush
